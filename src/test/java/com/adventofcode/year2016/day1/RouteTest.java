@@ -2,6 +2,8 @@ package com.adventofcode.year2016.day1;
 
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -44,6 +46,14 @@ public class RouteTest {
     @Test
     public void getLength_L2L2() throws Exception {
         assertThat(Route.parse("L2, L2").getTotalLength(), equalTo(4));
+    }
+
+
+    @Test
+    public void emptyPath() throws Exception {
+        Route emptyRoute = Route.parse("");
+        assertThat(emptyRoute.getTotalLength(), equalTo(0));
+        assertThat(emptyRoute.getLengthToFirstRevisit(), equalTo(Optional.empty()));
     }
 
     /*

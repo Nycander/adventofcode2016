@@ -1,8 +1,10 @@
 package com.adventofcode.year2016.day1;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -10,23 +12,23 @@ import java.util.stream.Stream;
 
 public final class Route {
     private static final Direction STARTING_DIRECTION = Direction.NORTH;
-    private final List<Location> locations;
-    private final int totalLength;
 
-    public Route(List<Instruction> instructions) {
-        this.locations = findLocations(instructions);
-        this.totalLength = calculateLengthFromLocationHistory(this.locations);
+    private final List<Location> locations;
+
+    public Route(List<Location> locations) {
+        this.locations = Objects.requireNonNull(Collections.unmodifiableList(new ArrayList<>(locations)));
+    }
+
+    public static Route fromInstructions(List<Instruction> instructions) {
+        return new Route(findLocations(instructions));
     }
 
     public static Route parse(String potentialRoute) {
-        return new Route(Stream.of(potentialRoute.split(","))
+        return Route.fromInstructions(Stream.of(potentialRoute.split(","))
                 .map(String::trim)
+                .filter(s -> !s.isEmpty())
                 .map(Instruction::valueOf)
                 .collect(Collectors.toList()));
-    }
-
-    private static int calculateLengthFromLocationHistory(List<Location> locations) {
-        return locations.get(locations.size() - 1).getLength();
     }
 
     private static List<Location> findLocations(List<Instruction> instructions) {
@@ -49,7 +51,7 @@ public final class Route {
     }
 
     public int getTotalLength() {
-        return totalLength;
+        return locations.get(locations.size() - 1).getLength();
     }
 
     public Optional<Integer> getLengthToFirstRevisit() {
