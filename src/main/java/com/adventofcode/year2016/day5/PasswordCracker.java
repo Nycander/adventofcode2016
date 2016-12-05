@@ -3,7 +3,6 @@ package com.adventofcode.year2016.day5;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
@@ -40,26 +39,14 @@ public class PasswordCracker {
                 .filter(b -> b[0] == 0)
                 .filter(b -> b[1] == 0)
                 .filter(b -> (b[2] & 0xf0) == 0)
-                .map(this::getCharacterAndPosition)
-                .filter(Objects::nonNull)
+                .map(PasswordCracker::bytesToString)
+                .filter(CharacterAtPosition::hasValidPosition)
+                .map(CharacterAtPosition::extractCharacterAndPosition)
                 .sequential()
                 .distinct()
                 .limit(size)
                 .reduce(new Password(size), Password::withCharacter, Password::merge)
                 .asString();
-    }
-
-
-    private CharacterAtPosition getCharacterAndPosition(byte[] bytes) {
-        // the sixth character represents the position (0-7),
-        // and the seventh character is the character to put in that position.
-        String string = bytesToString(bytes);
-        char position = string.charAt(5);
-        if (position < '0' || position > '7') {
-            return null; // Invalid position
-        }
-        char character = string.charAt(6);
-        return new CharacterAtPosition(Byte.parseByte(String.valueOf(position)), character);
     }
 
     private static byte[] md5(String message) {
