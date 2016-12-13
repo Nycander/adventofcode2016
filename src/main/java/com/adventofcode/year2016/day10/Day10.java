@@ -50,7 +50,7 @@ public class Day10 {
 
         InstructionParser instructionParser = new InstructionParser(botInspector);
 
-        Files.lines(Paths.get(Day9.class.getResource("/inputs/day10.txt").toURI()))
+        Files.lines(Paths.get(Day10.class.getResource("/inputs/day10.txt").toURI()))
                 .forEach(instructionParser::parseLine);
 
         System.out.println(botInspector.responsibleFor(ChipValue.valueOf(17), ChipValue.valueOf(61)));
